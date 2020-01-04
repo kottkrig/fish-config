@@ -1,22 +1,11 @@
-function fish_prompt --description 'Write out the prompt'
+function fish_prompt
+    set --local exit_code $status  # save previous exit code
 
-	set -l last_status $status
+    echo -e -n (_pure_prompt_beginning)  # init prompt context (clear current line, etc.)
+    echo -e (_pure_prompt_first_line)  # print current path, git branch/status, command duration
+    _pure_place_iterm2_prompt_mark # place iTerm shell integration mark
+    echo -e -n (_pure_prompt $exit_code)  # print prompt
+    echo -e (_pure_prompt_ending)  # reset colors and end prompt
 
-	if not set -q __fish_prompt_normal
-		set -g __fish_prompt_normal (set_color normal)
-	end
-
-	# PWD
-	set_color $fish_color_cwd
-	echo -n (prompt_pwd)
-	set_color normal
-
-	printf '%s ' (__fish_git_prompt)
-
-	if not test $last_status -eq 0
-	set_color $fish_color_error
-	end
-
-	echo -n '$ '
-
+    set _pure_fresh_session false
 end
